@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
+import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import './Map.css';
 
 mapboxgl.accessToken =
@@ -8,17 +9,19 @@ mapboxgl.accessToken =
 const Map = () => {
     const mapContainerRef = useRef(null);
 
-    const [lng, setLng] = useState(5);
-    const [lat, setLat] = useState(34);
-    const [zoom, setZoom] = useState(1.5);
+    const [lng, setLng] = useState(140);
+    const [lat, setLat] = useState(39);
+    const [zoom, setZoom] = useState(4.5);
 
     // Initialize map when component mounts
     useEffect(() => {
         const map = new mapboxgl.Map({
             container: mapContainerRef.current,
             style: 'mapbox://styles/mapbox/streets-v11',
+            language: 'zh-Hans',
             center: [lng, lat],
-            zoom: zoom
+            zoom: zoom,
+            projection: 'mercator'
         });
 
         // Add navigation control (the +/- zoom buttons)
@@ -29,6 +32,9 @@ const Map = () => {
             setLat(map.getCenter().lat.toFixed(4));
             setZoom(map.getZoom().toFixed(2));
         });
+
+        const language = new MapboxLanguage();
+        map.addControl(language);
 
         // Clean up on unmount
         return () => map.remove();
@@ -45,5 +51,7 @@ const Map = () => {
         </div>
     );
 };
+
+
 
 export default Map;
