@@ -12,13 +12,14 @@ const Map = () => {
     const [lng, setLng] = useState(140);
     const [lat, setLat] = useState(39);
     const [zoom, setZoom] = useState(4.5);
+    const [lang, setLang] = useState('zh-Hans');
 
     // Initialize map when component mounts
     useEffect(() => {
         const map = new mapboxgl.Map({
             container: mapContainerRef.current,
             style: 'mapbox://styles/mapbox/streets-v11',
-            language: 'zh-Hans',
+            language: lang,
             center: [lng, lat],
             zoom: zoom,
             projection: 'mercator'
@@ -38,13 +39,18 @@ const Map = () => {
 
         // Clean up on unmount
         return () => map.remove();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <div>
             <div className='sidebarStyle'>
                 <div>
                     Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
+                </div>
+                <div>
+                    Language: {lang} <span>  </span>
+                    {lang === "ja" && <button onClick={() => setLang('zh-Hans')}>zh-Hans</button>}
+                    {lang === "zh-Hans" && <button onClick={() => setLang('ja')}>ja</button>}
                 </div>
             </div>
             <div className='map-container' ref={mapContainerRef} />
