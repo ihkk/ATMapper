@@ -133,7 +133,8 @@ function App() {
             <div className='row'>
               <div className="input-group">
                 <input type="text" className="form-control" placeholder="搜索作品" value={keyword} onChange={handleChange} onKeyDown={handleKeyDown} />
-                <button className="btn btn-outline-secondary" type="button" onClick={search}>搜索</button>
+                <button className="btn btn-secondary" type="button" onClick={search}><i class="bi bi-search"></i>
+                </button>
               </div>
             </div>
             {showDropdown && (
@@ -162,8 +163,8 @@ function App() {
             )}
           </div>
           <div className="col-md-2">
-            {geoPoints.length > 0 &&
-              <button className="btn btn-danger" onClick={() => setGeoPoints([])}>Clear All</button>}
+            {(geoPoints.length > 0 || obtainedPoints.length > 0) &&
+              <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]) }}><i class="bi bi-arrow-clockwise"></i></button>}
           </div>
 
         </div>
@@ -180,7 +181,7 @@ function App() {
                     <button className="btn btn-primary ms-auto"
                       onClick={() => {
                         addGeoPoint(obtainedPoint);
-                      }}>Add</button>
+                      }}><i class="bi bi-plus-square"></i></button>
                   </li>
                 );
               })}
@@ -213,7 +214,9 @@ function App() {
                         <span className="flex-grow-1">{geoPoint.getPosName()}</span>
                         <button className="btn btn-danger ms-auto"
                           onClick={() => {
+                            const deletedGeoPoint = geoPoints[index];
                             setGeoPoints(geoPoints.filter((_, i) => i !== index));
+                            setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, deletedGeoPoint]);
                           }}>
                           <i class="bi bi-trash"></i>
                         </button>
