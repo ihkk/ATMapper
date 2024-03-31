@@ -145,7 +145,7 @@ function App() {
         <div className="row align-items-center m-2">
 
           <div className="col-md-2">
-            <h1>AT Planner</h1>
+            <h2>AT Planner</h2>
           </div>
           <div className="col col-md-8 position-relative">
             <div className='row'>
