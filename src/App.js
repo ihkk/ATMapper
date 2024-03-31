@@ -21,6 +21,11 @@ function App() {
   const timerId = useRef(null);
   const dropdownRef = useRef(null);
 
+  // for drag and drop
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [overIndex, setOverIndex] = useState(null);
+
+
 
   useEffect(() => {
     const savedObtainedPoints = localStorage.getItem('obtainedPoints');
@@ -220,24 +225,43 @@ function App() {
 
                 {/* a sortable list to display geoPoints with delete botton*/}
                 <ul className="list-group overflow-auto" style={{ maxHeight: '700px' }}>
-                  {geoPoints.map((geoPoint, index) => {
-                    return (
-                      <li key={index} className="list-group-item d-flex align-items-center">
-                        <span className="badge bg-secondary me-3">{index + 1}</span>
-                        <span className="flex-grow-1">{geoPoint.getPosName()}</span>
-                        <button className="btn btn-danger ms-auto"
-                          onClick={() => {
-                            const deletedGeoPoint = geoPoints[index];
-                            setGeoPoints(geoPoints.filter((_, i) => i !== index));
-                            setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, deletedGeoPoint]);
-                          }}>
-                          <i class="bi bi-trash"></i>
-                        </button>
-                      </li>
+                  {geoPoints.map((geoPoint, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item d-flex align-items-center draggable-item"
+                      draggable="true"
+                      onDragStart={() => setDraggedIndex(index)}
+                      onDragOver={(e) => {
+                        e.preventDefault(); // 防止默认处理拖拽结果（比如打开链接）
+                        setOverIndex(index);
+                      }}
+                      onDrop={() => {
+                        // 执行交换逻辑
+                        const newGeoPoints = Array.from(geoPoints);
+                        const draggedItem = newGeoPoints.splice(draggedIndex, 1)[0];
+                        newGeoPoints.splice(overIndex, 0, draggedItem);
+                        setGeoPoints(newGeoPoints);
 
-                    );
-                  })}
+                        // 更新obtainedPoints
+                        setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, geoPoints[draggedIndex]]);
+                      }}
+                    >
+                      <span className="badge bg-secondary me-3">{index + 1}</span>
+                      <span className="flex-grow-1">{geoPoint.getPosName()}</span>
+                      <button
+                        className="btn btn-danger ms-auto"
+                        onClick={() => {
+                          const deletedGeoPoint = geoPoints[index];
+                          setGeoPoints(geoPoints.filter((_, i) => i !== index));
+                          setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, deletedGeoPoint]);
+                        }}
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>
+                    </li>
+                  ))}
                 </ul>
+
               </div>
             </div>
           </div>
