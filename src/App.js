@@ -4,11 +4,39 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
 import GeoPoint from './components/GeoPoint';
 import 'mapbox-gl/dist/mapbox-gl.css'
-
+import axios from 'axios';
 
 function App() {
   // geo points saved in the state
   const [geoPoints, setGeoPoints] = useState([]);
+  const [obtainedPoints, setObtainedPoints] = useState([]);
+
+  // function allowing users to add a new geo point to the state
+  const addGeoPoint = (newGeoPoint) => {
+    setGeoPoints([...geoPoints, newGeoPoint]);
+    setObtainedPoints(currentPoints => currentPoints.filter(p => p !== newGeoPoint));
+  }
+
+
+  // obtain points from Anitabi
+  const obtainPoints = async () => {
+    const response = await axios.get('https://api.anitabi.cn/bangumi/277518/points/detail');
+    const newObtainedPoints = response.data.map(point => {
+      return new GeoPoint(
+
+        point.name,      // posName
+        "GIVEN",         // animeName
+        point.geo[0],    // latitude
+        point.geo[1],    // longitude
+        point.image,     // pic
+        point.ep,        // ep
+        point.s,         // s
+      );
+    });
+
+    setObtainedPoints(newObtainedPoints);
+  }
+
 
   // add demo data to the state
   const addDemoData = () => {
@@ -24,7 +52,8 @@ function App() {
 
   // initialize the state with demo data when the component is mounted
   useState(() => {
-    addDemoData();
+    obtainPoints();
+    // addDemoData();
   }, []);
 
 
@@ -40,22 +69,56 @@ function App() {
         </div>
 
         <div className="row">
-          <div className="col-md-2 "></div>
+
+          <div className="col-md-2">
+            {/* display all points from obtainedPoints and allow users to add them to newObtainedPoints*/}
+            <ul className="list-group overflow-auto" style={{ maxHeight: '700px' }}>
+              {obtainedPoints.map((obtainedPoint, index) => {
+                return (
+                  <li key={index} className="list-group-item d-flex justify-content-between align-items-start">
+                    {obtainedPoint.getPosName()}
+                    <button className="btn btn-primary ms-auto" onClick={() => addGeoPoint(obtainedPoint)}>Add</button>
+                  </li>
+                );
+              })}
+            </ul>
+
+          </div>
+
           <div className="col-md-8 ">
             <Map geoPoints={geoPoints} />
           </div>
 
           <div className="col-md-2">
-            {/* a sortable list to display  geoPoints*/}
-            <ul className="list-group">
-              {geoPoints.map((geoPoint, index) => {
-                return (
-                  <li key={index} className="list-group-item">
-                    {geoPoint.getPosName()}
-                  </li>
-                );
-              })}
-            </ul>
+            {/* title */}
+            <div className='row'>
+              <div className="col-md-12">
+                <h4 className="text-center">Selected Points</h4>
+              </div>
+            </div>
+            <div className='row'>
+              <div className="col-md-12">
+                {geoPoints.length > 0 &&
+                  <button className="btn btn-danger" onClick={() => setGeoPoints([])}>Clear All</button>}
+              </div>
+            </div>
+
+            <div className='row'>
+              <div className="col-md-12">
+
+                {/* a sortable list to display geoPoints with delete botton*/}
+                <ul className="list-group overflow-auto" style={{ maxHeight: '700px' }}>
+                  {geoPoints.map((geoPoint, index) => {
+                    return (
+                      <li key={index} className="list-group-item d-flex justify-content-between align-items-start">
+                        {geoPoint.getPosName()}
+                        <button className="btn btn-danger ms-auto" onClick={() => setGeoPoints(geoPoints.filter((point, i) => i !== index))}>Delete</button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 

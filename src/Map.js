@@ -37,20 +37,44 @@ function Map({ geoPoints }) {
         const language = new MapboxLanguage();
         map.addControl(language);
         map.on('load', function () {
-            map.resize();
-
             if (geoPoints && geoPoints.length > 0) {
-                geoPoints.forEach(point => {
-                    new mapboxgl.Marker()
+                geoPoints.forEach((point, index) => {
+                    // create a DOM element for the marker
+                    const el = document.createElement('div');
+                    el.className = 'custom-marker';
+                    el.innerHTML = `<span class="marker-number">${index + 1}</span>`; // 使用 index 来生成数字
+
+                    // set marker style
+                    el.style.width = '30px';
+                    el.style.height = '30px';
+                    el.style.borderRadius = '50%';
+                    el.style.backgroundColor = 'white';
+                    el.style.border = '4px solid black';
+                    el.style.display = 'flex';
+                    el.style.alignItems = 'center';
+                    el.style.justifyContent = 'center';
+                    el.style.color = 'black';
+                    el.style.fontSize = '15px';
+                    el.style.fontWeight = 'bold';
+
+                    // add marker to map
+                    new mapboxgl.Marker(el)
                         .setLngLat([point.getLongitude(), point.getLatitude()])
-                        .setPopup(new mapboxgl.Popup({ offset: 25 })
+                        .setPopup(new mapboxgl.Popup({ offset: 20 }) // 添加弹窗
                             .setText(`${point.getPosName()}: ${point.getAnimeName()}`))
                         .addTo(map);
-                    console.log(`Position Name: ${point.getPosName()}, Anime Name: ${point.getAnimeName()}, Coordinates: (${point.getLatitude()}, ${point.getLongitude()})`);
                 });
             }
         });
 
+        // calculate the center and zoom level of the map
+        if (geoPoints && geoPoints.length > 0) {
+            const bounds = new mapboxgl.LngLatBounds();
+            geoPoints.forEach((point) => {
+                bounds.extend([point.getLongitude(), point.getLatitude()]);
+            });
+            map.fitBounds(bounds, { padding: 50 });
+        }
 
         // Clean up on unmount
         return () => map.remove();

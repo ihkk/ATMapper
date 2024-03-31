@@ -1,3 +1,13 @@
 #map {
-    height: 100vh;
+    height: 80vh;
+}
+
+.mapboxgl-ctrl-bottom-left,
+.mapboxgl-ctrl-bottom-right {
+    display: none;
+}
+
+.scrollable-list {
+    max-height: 500px;
+    overflow-y: auto;
 }

@@ -2,19 +2,16 @@
 // GeoPoint component is a form input for a latitude and longitude, with PosName, AnimeName
 
 export default class GeoPoint {
-    // define the properties of the GeoPoint class
-    posName;
-    animeName;
-    latitude;
-    longitude;
-    pic;
     // Constructor for the GeoPoint class
-    constructor(posName, animeName, latitude, longitude, pic) {
+    constructor(posName, animeName, latitude, longitude, pic, ep, s, image) {
         this.posName = posName;
         this.animeName = animeName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.pic = pic;
+        this.ep = ep;
+        this.s = s;
+        this.image = image;
     }
 
     // Getter methods for properties
