@@ -7,6 +7,7 @@ import GeoPoint from './components/GeoPoint';
 import 'mapbox-gl/dist/mapbox-gl.css'
 import axios from 'axios';
 import html2canvas from 'html2canvas';
+import wrapText from './components/WrapText';
 
 
 function App() {
@@ -131,6 +132,8 @@ function App() {
     }
   }, [selectedId]);
 
+
+
   // load obtainedPoints and geoPoints from local storage when the component mounts
   useEffect(() => {
     const obtainedPoints = JSON.parse(localStorage.getItem('obtainedPoints')) || [];
@@ -141,10 +144,40 @@ function App() {
   }, []);
 
   const download = () => {
-    html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
+    html2canvas(document.querySelector('.mapboxgl-map')).then(firstCanvas => {
+      // create the second canvas to list all locations
+      const secondCanvas = document.createElement('canvas');
+      secondCanvas.width = 210; // 设置为所需的尺寸
+      secondCanvas.height = firstCanvas.height;
+      const ctx2 = secondCanvas.getContext('2d');
+
+      // draw a white background
+      ctx2.fillStyle = 'white';
+      ctx2.fillRect(0, 0, 210, firstCanvas.height);
+
+      let startY = 30;
+      // list all locations in the second canvas
+      geoPoints.forEach((geoPoint, index) => {
+        let text = `${index + 1}. ${geoPoint.getPosName()}`;
+        ctx2.font = '20px Arial';
+        ctx2.fillStyle = 'black';
+        startY = wrapText(ctx2, text, 10, startY, 190, 30) + 10;
+      });
+
+      // create a combined canvas
+      const combinedCanvas = document.createElement('canvas');
+      combinedCanvas.width = firstCanvas.width + secondCanvas.width;
+      combinedCanvas.height = Math.max(firstCanvas.height, secondCanvas.height);
+      const ctxCombined = combinedCanvas.getContext('2d');
+
+      // combine the two canvases
+      ctxCombined.drawImage(firstCanvas, 0, 0);
+      ctxCombined.drawImage(secondCanvas, firstCanvas.width, 0);
+
+      // download the combined canvas
       const link = document.createElement('a');
-      link.download = 'atplanner.png';
-      link.href = canvas.toDataURL();
+      link.download = 'combined.png';
+      link.href = combinedCanvas.toDataURL();
       link.click();
     });
   }
