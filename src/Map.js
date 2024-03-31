@@ -61,7 +61,7 @@ function Map({ geoPoints }) {
                     new mapboxgl.Marker(el)
                         .setLngLat([point.getLongitude(), point.getLatitude()])
                         .setPopup(new mapboxgl.Popup({ offset: 20 }) // 添加弹窗
-                            .setText(`${point.getPosName()}: ${point.getAnimeName()}`))
+                            .setText(`${point.getPosName()}：${point.getAnimeName()}`))
                         .addTo(map);
                 });
             }

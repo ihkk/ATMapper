@@ -2,6 +2,7 @@
     height: 80vh;
 }
 
+.mapboxgl-ctrl-top-right,
 .mapboxgl-ctrl-bottom-left,
 .mapboxgl-ctrl-bottom-right {
     display: none;
@@ -10,4 +11,16 @@
 .scrollable-list {
     max-height: 500px;
     overflow-y: auto;
+}
+
+.list-group::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari 和 Opera */
+}
+
+.list-group {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
 }
