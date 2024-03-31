@@ -6,6 +6,8 @@ import { useState, useEffect, useRef } from 'react';
 import GeoPoint from './components/GeoPoint';
 import 'mapbox-gl/dist/mapbox-gl.css'
 import axios from 'axios';
+import html2canvas from 'html2canvas';
+
 
 function App() {
   // geo points saved in the state
@@ -138,6 +140,17 @@ function App() {
     console.log('loaded from local storage');
   }, []);
 
+  const download = () => {
+    html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'atplanner.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    });
+  }
+
+
+
   return (
     <div>
       {/* three rows */}
@@ -183,6 +196,8 @@ function App() {
           <div className="col-md-2">
             {(geoPoints.length > 0 || obtainedPoints.length > 0) &&
               <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]) }}><i class="bi bi-arrow-clockwise"></i></button>}
+            {/* download button */}
+            {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
           </div>
 
         </div>

@@ -10,6 +10,7 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "html2canvas": "^1.4.1",
     "mapbox-gl": "^3.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -22,7 +22,8 @@ function Map({ geoPoints }) {
             language: lang,
             center: [lng, lat],
             zoom: zoom,
-            projection: 'mercator'
+            projection: 'mercator',
+            preserveDrawingBuffer: true
         });
 
         // Add navigation control (the +/- zoom buttons)
