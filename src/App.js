@@ -19,6 +19,7 @@ function App() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [keyword, setKeyword] = useState('');
   const timerId = useRef(null);
+  const dropdownRef = useRef(null);
 
 
   useEffect(() => {
@@ -31,6 +32,18 @@ function App() {
       setGeoPoints(JSON.parse(savedGeoPoints));
     }
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownRef]);
+
 
   // function allowing users to add a new geo point to the state
   const addGeoPoint = (newGeoPoint) => {
@@ -138,7 +151,7 @@ function App() {
               </div>
             </div>
             {showDropdown && (
-              <div className='row'>
+              <div className='row' ref={dropdownRef}>
                 <div className="col">
                   <div className="list-group position-absolute w-100" style={{ zIndex: 1050, maxHeight: '300px', overflowY: 'auto', top: 'calc(100% - 1px)', paddingRight: '23px', }}>
                     {searchResults.map((item) => (
