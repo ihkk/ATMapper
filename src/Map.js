@@ -6,7 +6,7 @@ import './Map.css';
 mapboxgl.accessToken =
     'pk.eyJ1IjoiaWhrayIsImEiOiJjbHVkZWRlMG8xYWFsMmxxbnAxMm9yZ3U3In0.vz0G2accFeSOiZnLVBzsIw';
 
-const Map = () => {
+function Map({ geoPoints }) {
     const mapContainerRef = useRef(null);
 
     const [lng, setLng] = useState(140);
@@ -18,7 +18,7 @@ const Map = () => {
     useEffect(() => {
         const map = new mapboxgl.Map({
             container: mapContainerRef.current,
-            style: 'mapbox://styles/mapbox/streets-v11',
+            style: 'mapbox://styles/ihkk/clufvac8l00tw01pib4ek0884',
             language: lang,
             center: [lng, lat],
             zoom: zoom,
@@ -36,24 +36,29 @@ const Map = () => {
 
         const language = new MapboxLanguage();
         map.addControl(language);
+        map.on('load', function () {
+            map.resize();
+
+            if (geoPoints && geoPoints.length > 0) {
+                geoPoints.forEach(point => {
+                    new mapboxgl.Marker()
+                        .setLngLat([point.getLongitude(), point.getLatitude()])
+                        .setPopup(new mapboxgl.Popup({ offset: 25 })
+                            .setText(`${point.getPosName()}: ${point.getAnimeName()}`))
+                        .addTo(map);
+                    console.log(`Position Name: ${point.getPosName()}, Anime Name: ${point.getAnimeName()}, Coordinates: (${point.getLatitude()}, ${point.getLongitude()})`);
+                });
+            }
+        });
+
 
         // Clean up on unmount
         return () => map.remove();
-    }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [geoPoints, lang]);
 
     return (
         <div>
-            <div className='sidebarStyle'>
-                <div>
-                    Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-                </div>
-                <div>
-                    Language: {lang} <span>  </span>
-                    {lang === "ja" && <button onClick={() => setLang('zh-Hans')}>zh-Hans</button>}
-                    {lang === "zh-Hans" && <button onClick={() => setLang('ja')}>ja</button>}
-                </div>
-            </div>
-            <div className='map-container' ref={mapContainerRef} />
+            <div id="map" ref={mapContainerRef} />
         </div>
     );
 };
