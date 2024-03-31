@@ -208,11 +208,11 @@ function App() {
 
           <div className="col-md-2">
             {/* title */}
-            <div className='row'>
+            {/* <div className='row'>
               <div className="col-md-12">
                 <h4 className="text-center">Selected Points</h4>
               </div>
-            </div>
+            </div> */}
 
 
             <div className='row'>
