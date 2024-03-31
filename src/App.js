@@ -18,8 +18,8 @@ function App() {
   const [selectedAnime, setSelectedAnime] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [keyword, setKeyword] = useState('');
-
   const timerId = useRef(null);
+
 
 
   // function allowing users to add a new geo point to the state
@@ -97,7 +97,7 @@ function App() {
       <div className="container-fluid">
         <div className="row align-items-center m-2">
 
-          <div className="col-auto">
+          <div className="col-md-2">
             <h1>AT Planner</h1>
           </div>
           <div className="col col-md-8 position-relative">
@@ -132,11 +132,9 @@ function App() {
               </div>
             )}
           </div>
-          <div className="col-auto">
-            <div className='row'>
-              {geoPoints.length > 0 &&
-                <button className="btn btn-danger" onClick={() => setGeoPoints([])}>Clear All</button>}
-            </div>
+          <div className="col-md-2">
+            {geoPoints.length > 0 &&
+              <button className="btn btn-danger" onClick={() => setGeoPoints([])}>Clear All</button>}
           </div>
 
         </div>
