@@ -21,6 +21,16 @@ function App() {
   const timerId = useRef(null);
 
 
+  useEffect(() => {
+    const savedObtainedPoints = localStorage.getItem('obtainedPoints');
+    const savedGeoPoints = localStorage.getItem('geoPoints');
+    if (savedObtainedPoints) {
+      setObtainedPoints(JSON.parse(savedObtainedPoints));
+    }
+    if (savedGeoPoints) {
+      setGeoPoints(JSON.parse(savedGeoPoints));
+    }
+  }, []);
 
   // function allowing users to add a new geo point to the state
   const addGeoPoint = (newGeoPoint) => {
@@ -45,9 +55,21 @@ function App() {
         point.s,         // s
       );
     });
-
     setObtainedPoints(newObtainedPoints);
   }
+
+  // save obtainedPoints and geoPoints to local storage
+  useEffect(() => {
+    // if empty, do not save
+    if (obtainedPoints.length === 0 && geoPoints.length === 0) return;
+    localStorage.setItem('obtainedPoints', JSON.stringify(obtainedPoints));
+    localStorage.setItem('geoPoints', JSON.stringify(geoPoints));
+    console.log('saved to local storage');
+  }, [obtainedPoints, geoPoints]);
+
+
+
+
 
   const search = async () => {
     if (!keyword.trim()) return;
@@ -56,7 +78,7 @@ function App() {
       setSearchResults(response.data.list || []);
       setShowDropdown(true);
     } catch (error) {
-      console.error('搜索失败:', error);
+      console.error('Search error:', error);
       setSearchResults([]);
       setShowDropdown(false);
     }
@@ -89,7 +111,14 @@ function App() {
     }
   }, [selectedId]);
 
-
+  // load obtainedPoints and geoPoints from local storage when the component mounts
+  useEffect(() => {
+    const obtainedPoints = JSON.parse(localStorage.getItem('obtainedPoints')) || [];
+    const geoPoints = JSON.parse(localStorage.getItem('geoPoints')) || [];
+    setObtainedPoints(obtainedPoints.map(point => new GeoPoint(point.posName, point.animeName, point.latitude, point.longitude, point.pic, point.ep, point.s)));
+    setGeoPoints(geoPoints.map(point => new GeoPoint(point.posName, point.animeName, point.latitude, point.longitude, point.pic, point.ep, point.s)));
+    console.log('loaded from local storage');
+  }, []);
 
   return (
     <div>
@@ -148,7 +177,10 @@ function App() {
                 return (
                   <li key={index} className="list-group-item d-flex justify-content-between align-items-start">
                     {obtainedPoint.getPosName()}
-                    <button className="btn btn-primary ms-auto" onClick={() => addGeoPoint(obtainedPoint)}>Add</button>
+                    <button className="btn btn-primary ms-auto"
+                      onClick={() => {
+                        addGeoPoint(obtainedPoint);
+                      }}>Add</button>
                   </li>
                 );
               })}
@@ -179,7 +211,10 @@ function App() {
                       <li key={index} className="list-group-item d-flex align-items-center">
                         <span className="badge bg-secondary me-3">{index + 1}</span>
                         <span className="flex-grow-1">{geoPoint.getPosName()}</span>
-                        <button className="btn btn-danger ms-auto" onClick={() => setGeoPoints(geoPoints.filter((_, i) => i !== index))}>
+                        <button className="btn btn-danger ms-auto"
+                          onClick={() => {
+                            setGeoPoints(geoPoints.filter((_, i) => i !== index));
+                          }}>
                           <i class="bi bi-trash"></i>
                         </button>
                       </li>
