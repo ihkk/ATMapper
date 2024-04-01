@@ -229,7 +229,6 @@ function App() {
                           <span className="text-truncate">{item.name_cn || item.name} {item.name_cn ? `(${item.name})` : ''}</span>
                         </div>
                       </div>
-
                     ))}
                   </div>
                 </div>
