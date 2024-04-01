@@ -66,20 +66,26 @@ function App() {
   // obtain points from Anitabi
   const obtainPoints = async () => {
     if (!selectedId) return;
-    const id = selectedId;
-    const response = await axios.get(`https://api.anitabi.cn/bangumi/${id}/points/detail`);
-    const newObtainedPoints = response.data.map(point => {
-      return new GeoPoint(
-        point.name,      // posName
-        selectedAnime,   // animeName
-        point.geo[0],    // latitude
-        point.geo[1],    // longitude
-        point.image,     // pic
-        point.ep,        // ep
-        point.s,         // s
-      );
-    });
-    setObtainedPoints(newObtainedPoints);
+    const animeID = selectedId;
+    const response = await axios.get(`https://api.anitabi.cn/bangumi/${animeID}/points/detail`);
+    const newObtainedPoints = response.data
+      .map(point => {
+        return new GeoPoint(
+          point.id,        // id
+          point.name,      // posName
+          selectedAnime,   // animeName
+          point.geo[0],    // latitude
+          point.geo[1],    // longitude
+          point.image,     // pic
+          point.ep,        // ep
+          point.s,         // s
+        );
+      });
+    const filteredNewPoints = newObtainedPoints.filter(newPoint =>
+      !geoPoints.some(existingPoint => existingPoint.id === newPoint.id)
+    );
+
+    setObtainedPoints(filteredNewPoints);
   }
 
   // save obtainedPoints and geoPoints to local storage
@@ -141,46 +147,47 @@ function App() {
   useEffect(() => {
     const obtainedPoints = JSON.parse(localStorage.getItem('obtainedPoints')) || [];
     const geoPoints = JSON.parse(localStorage.getItem('geoPoints')) || [];
-    setObtainedPoints(obtainedPoints.map(point => new GeoPoint(point.posName, point.animeName, point.latitude, point.longitude, point.pic, point.ep, point.s)));
-    setGeoPoints(geoPoints.map(point => new GeoPoint(point.posName, point.animeName, point.latitude, point.longitude, point.pic, point.ep, point.s)));
+    setObtainedPoints(obtainedPoints.map(point => new GeoPoint(point.id, point.posName, point.animeName, point.latitude, point.longitude, point.pic, point.ep, point.s)));
+    setGeoPoints(geoPoints.map(point => new GeoPoint(point.id, point.posName, point.animeName, point.latitude, point.longitude, point.pic, point.ep, point.s)));
     console.log('loaded from local storage');
   }, []);
 
   const download = () => {
     html2canvas(document.querySelector('.mapboxgl-map')).then(firstCanvas => {
-      // create the second canvas to list all locations
-      const secondCanvas = document.createElement('canvas');
-      secondCanvas.width = 210; // 设置为所需的尺寸
-      secondCanvas.height = firstCanvas.height;
-      const ctx2 = secondCanvas.getContext('2d');
+      // // create the second canvas to list all locations
+      // const secondCanvas = document.createElement('canvas');
+      // secondCanvas.width = 210; // 设置为所需的尺寸
+      // secondCanvas.height = firstCanvas.height;
+      // const ctx2 = secondCanvas.getContext('2d');
 
-      // draw a white background
-      ctx2.fillStyle = 'white';
-      ctx2.fillRect(0, 0, 210, firstCanvas.height);
+      // // draw a white background
+      // ctx2.fillStyle = 'white';
+      // ctx2.fillRect(0, 0, 210, firstCanvas.height);
 
-      let startY = 30;
-      // list all locations in the second canvas
-      geoPoints.forEach((geoPoint, index) => {
-        let text = `${index + 1}. ${geoPoint.getPosName()}`;
-        ctx2.font = '20px Arial';
-        ctx2.fillStyle = 'black';
-        startY = wrapText(ctx2, text, 10, startY, 190, 30) + 10;
-      });
+      // let startY = 30;
+      // // list all locations in the second canvas
+      // geoPoints.forEach((geoPoint, index) => {
+      //   let text = `${index + 1}. ${geoPoint.getPosName()}`;
+      //   ctx2.font = '20px Arial';
+      //   ctx2.fillStyle = 'black';
+      //   startY = wrapText(ctx2, text, 10, startY, 190, 30) + 10;
+      // });
 
-      // create a combined canvas
-      const combinedCanvas = document.createElement('canvas');
-      combinedCanvas.width = firstCanvas.width + secondCanvas.width;
-      combinedCanvas.height = Math.max(firstCanvas.height, secondCanvas.height);
-      const ctxCombined = combinedCanvas.getContext('2d');
+      // // create a combined canvas
+      // const combinedCanvas = document.createElement('canvas');
+      // combinedCanvas.width = firstCanvas.width + secondCanvas.width;
+      // combinedCanvas.height = Math.max(firstCanvas.height, secondCanvas.height);
+      // const ctxCombined = combinedCanvas.getContext('2d');
 
-      // combine the two canvases
-      ctxCombined.drawImage(firstCanvas, 0, 0);
-      ctxCombined.drawImage(secondCanvas, firstCanvas.width, 0);
+      // // combine the two canvases
+      // ctxCombined.drawImage(firstCanvas, 0, 0);
+      // ctxCombined.drawImage(secondCanvas, firstCanvas.width, 0);
 
       // download the combined canvas
       const link = document.createElement('a');
       link.download = 'combined.png';
-      link.href = combinedCanvas.toDataURL();
+      // link.href = combinedCanvas.toDataURL();
+      link.href = firstCanvas.toDataURL();
       link.click();
     });
   }

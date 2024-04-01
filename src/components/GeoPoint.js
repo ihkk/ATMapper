@@ -3,7 +3,8 @@
 
 export default class GeoPoint {
     // Constructor for the GeoPoint class
-    constructor(posName, animeName, latitude, longitude, pic, ep, s, image) {
+    constructor(id, posName, animeName, latitude, longitude, pic, ep, s, image) {
+        this.id = id;
         this.posName = posName;
         this.animeName = animeName;
         this.latitude = latitude;
@@ -15,6 +16,9 @@ export default class GeoPoint {
     }
 
     // Getter methods for properties
+    getID() {
+        return this.id;
+    }
     getPosName() {
         return this.posName;
     }
