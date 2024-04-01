@@ -239,7 +239,7 @@ function App() {
           <div className="col-md-2">
             {/* reset button */}
             {(geoPoints.length > 0 || obtainedPoints.length > 0) &&
-              <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]); localStorage.clear() }}><i class="bi bi-arrow-clockwise"></i></button>}
+              <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]); setKeyword(""); localStorage.clear() }}><i class="bi bi-arrow-clockwise"></i></button>}
             {/* download button */}
             {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
             {/* switch language */}
