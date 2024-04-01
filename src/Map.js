@@ -45,16 +45,16 @@ function Map({ geoPoints, lang }) {
                     el.innerHTML = `<span class="marker-number">${index + 1}</span>`; // 使用 index 来生成数字
 
                     // set marker style
-                    el.style.width = '30px';
-                    el.style.height = '30px';
+                    el.style.width = '20px';
+                    el.style.height = '20px';
                     el.style.borderRadius = '50%';
-                    el.style.backgroundColor = 'white';
-                    el.style.border = '4px solid black';
+                    el.style.backgroundColor = 'black';
+                    // el.style.border = '4px solid black';
                     el.style.display = 'flex';
                     el.style.alignItems = 'center';
                     el.style.justifyContent = 'center';
-                    el.style.color = 'black';
-                    el.style.fontSize = '15px';
+                    el.style.color = 'white';
+                    el.style.fontSize = '12px';
                     el.style.fontWeight = 'bold';
 
                     // add marker to map

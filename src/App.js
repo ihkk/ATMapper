@@ -210,7 +210,7 @@ function App() {
                   <div className="list-group position-absolute w-100" style={{ zIndex: 1050, maxHeight: '300px', overflowY: 'auto', top: 'calc(100% - 1px)', paddingRight: '23px', }}>
                     {searchResults.map((item) => (
                       <div key={item.id}
-                        className="list-group-item list-group-item-action d-flex gap-3 py-2 align-items-center"
+                        className="list-group-item list-group-item-action d-flex gap-3 py-2 align-items-center cursor-pointer"
                         aria-current="true"
                         onClick={() => {
                           setSelectedId(item.id);
@@ -286,17 +286,15 @@ function App() {
                       draggable="true"
                       onDragStart={() => setDraggedIndex(index)}
                       onDragOver={(e) => {
-                        e.preventDefault(); // 防止默认处理拖拽结果（比如打开链接）
+                        e.preventDefault();
                         setOverIndex(index);
                       }}
                       onDrop={() => {
-                        // 执行交换逻辑
                         const newGeoPoints = Array.from(geoPoints);
                         const draggedItem = newGeoPoints.splice(draggedIndex, 1)[0];
                         newGeoPoints.splice(overIndex, 0, draggedItem);
                         setGeoPoints(newGeoPoints);
 
-                        // 更新obtainedPoints
                         setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, geoPoints[draggedIndex]]);
                       }}
                     >
