@@ -28,6 +28,9 @@ function App() {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [overIndex, setOverIndex] = useState(null);
 
+  // map language
+  const [lang, setLang] = useState('zh-Hans');
+
 
 
   useEffect(() => {
@@ -227,10 +230,13 @@ function App() {
             )}
           </div>
           <div className="col-md-2">
+            {/* reset button */}
             {(geoPoints.length > 0 || obtainedPoints.length > 0) &&
-              <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]) }}><i class="bi bi-arrow-clockwise"></i></button>}
+              <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]); localStorage.clear() }}><i class="bi bi-arrow-clockwise"></i></button>}
             {/* download button */}
             {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
+            {/* switch language */}
+            <button className="btn btn-secondary ms-2" onClick={() => { setLang(lang === 'zh-Hans' ? 'ja' : 'zh-Hans') }}><i class="bi bi-translate"></i></button>
           </div>
 
         </div>
@@ -256,7 +262,7 @@ function App() {
           </div>
 
           <div className="col-md-8 ">
-            <Map geoPoints={geoPoints} />
+            <Map geoPoints={geoPoints} lang={lang} />
           </div>
 
           <div className="col-md-2">

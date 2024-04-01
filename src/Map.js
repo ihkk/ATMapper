@@ -6,13 +6,12 @@ import './Map.css';
 mapboxgl.accessToken =
     'pk.eyJ1IjoiaWhrayIsImEiOiJjbHVkZWRlMG8xYWFsMmxxbnAxMm9yZ3U3In0.vz0G2accFeSOiZnLVBzsIw';
 
-function Map({ geoPoints }) {
+function Map({ geoPoints, lang }) {
     const mapContainerRef = useRef(null);
 
     const [lng, setLng] = useState(140);
     const [lat, setLat] = useState(39);
     const [zoom, setZoom] = useState(4.5);
-    const [lang, setLang] = useState('zh-Hans');
 
     // Initialize map when component mounts
     useEffect(() => {
