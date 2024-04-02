@@ -1,5 +1,5 @@
 #map {
-    height: 120vh;
+    height: 90vh;
 }
 
 .mapboxgl-ctrl-top-right,
@@ -27,4 +27,11 @@
 
 .mapboxgl-popup-content {
     color: black;
+}
+
+.legend {
+    color: black;
+    box-shadow: 5px 5px 8px 0px rgb(0 0 0 / 67%) !important;
+    border-radius: 5px;
+
 }

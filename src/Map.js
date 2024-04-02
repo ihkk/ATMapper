@@ -13,6 +13,22 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
     const [lat, setLat] = useState(39);
     const [zoom, setZoom] = useState(4.5);
 
+    // legend
+    const legend = document.createElement('div');
+    legend.className = 'mapboxgl-ctrl mapboxgl-ctrl-group legend';
+    legend.style.backgroundColor = '#fff';
+    legend.style.padding = '10px';
+    legend.style.width = '20%';
+
+
+    geoPoints.forEach((point, index) => {
+        const item = document.createElement('div');
+        item.textContent = `${index + 1}: ${point.getPosName()}`;
+        legend.appendChild(item);
+    });
+
+
+
     // Initialize map when component mounts
     useEffect(() => {
         const map = new mapboxgl.Map({
@@ -80,6 +96,11 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
                 });
             };
 
+            const legendContainer = map.getContainer();
+            legendContainer.appendChild(legend);
+            legend.style.position = 'absolute';
+            legend.style.bottom = '10px';
+            legend.style.right = '10px';
 
         });
 
