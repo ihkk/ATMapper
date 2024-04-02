@@ -79,7 +79,6 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
                     el.style.height = '20px';
                     el.style.borderRadius = '50%';
                     el.style.backgroundColor = 'black';
-                    // el.style.border = '4px solid black';
                     el.style.display = 'flex';
                     el.style.alignItems = 'center';
                     el.style.justifyContent = 'center';

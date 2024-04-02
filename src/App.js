@@ -7,7 +7,6 @@ import GeoPoint from './components/GeoPoint';
 import 'mapbox-gl/dist/mapbox-gl.css'
 import axios from 'axios';
 import html2canvas from 'html2canvas';
-import wrapText from './components/WrapText';
 
 
 function App() {
@@ -31,6 +30,7 @@ function App() {
   // for hiding obtained points
   const [showObtainedPoints, setShowObtainedPoints] = useState(true);
   const [hiddenObtainedPoints, setHiddenObtainedPoints] = useState([]);
+
 
 
   // map language
