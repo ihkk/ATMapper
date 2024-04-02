@@ -219,7 +219,7 @@ function App() {
                         onClick={() => {
                           setSelectedId(item.id);
                           setShowDropdown(false);
-                          setSelectedAnime(item.name_cn);
+                          setSelectedAnime(item.name);
                         }}>
                         <img src={item.images ? item.images.grid : ''} alt={item.name} className="d-flex align-self-center" style={{ width: '30px', height: '30px' }} />
                         <div className="d-flex align-items-center text-truncate" style={{ maxWidth: 'calc(100% - 60px)' }}>
