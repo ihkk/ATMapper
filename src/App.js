@@ -39,6 +39,11 @@ function App() {
   // map language
   const [lang, setLang] = useState('ja');
 
+  // footer info
+  const [showModal, setShowModal] = useState(false);
+
+
+  const toggleModal = () => setShowModal(!showModal);
 
 
   useEffect(() => {
@@ -253,6 +258,10 @@ function App() {
             <button className="btn btn-secondary ms-2" onClick={() => { setLang(lang === 'zh-Hans' ? 'ja' : 'zh-Hans') }}><i class="bi bi-translate"></i></button>
             {/* change legend pos */}
             <button className="btn btn-secondary ms-2" onClick={() => { toggleLegendPosition() }}>切换图例</button>
+            {/* info */}
+            <button className="btn btn-secondary ms-2" onClick={toggleModal}>
+              <i class="bi bi-info-circle"></i>
+            </button>
 
 
           </div>
@@ -374,8 +383,41 @@ function App() {
           </div>
         </div>
 
+        {showModal && (
+          <div className="modal pt-5" tabIndex="-1" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">关于</h5>
+                  <button type="button" className="btn-close" onClick={toggleModal}></button>
+                </div>
+                <div className="modal-body">
+                  <div className='row'>
+                    <span class="mb-md-0 text-muted">
+                      ©
+                      <a href="https://github.com/ihkk" class="link" target="_blank" style={{ textDecoration: "none" }}>Jacky HE</a>,
+                      巡礼数据来源 <a href="https://anitabi.cn/" class="link" target="_blank" style={{ textDecoration: "none" }}>  <i class="bi bi-compass"></i>  Anitabi</a>, 番剧信息 <a href="https://bgm.tv/" class="link" target="_blank" style={{ textDecoration: "none" }}><i class="bi bi-display"></i> Bangumi</a>
+                    </span>
+                  </div>
+                  <div className='row pt-2'>
+                    <span class="mb-md-0 text-muted">
+                      遵循
+                      署名、非商业性使用、相同方式共享 的 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" target="_blank" style={{ textDecoration: "none" }}><i class="bi bi-cc-circle"></i> CC BY-NC-SA 4.0</a> 协议共享
+                    </span>
+                  </div>
+                  <div className='row pt-2'>
+                    <span class="mb-md-0 text-muted">
+                      Github: <a href="https://github.com/ihkk/ATMapper" target="_blank" style={{ textDecoration: "none" }}><i class="bi bi-github"></i> ihkk/ATMapper</a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
-    </div>
+    </div >
   );
 }
 
