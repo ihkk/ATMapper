@@ -196,7 +196,6 @@ function App() {
 
   const download = () => {
     html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
-      // download the combined canvas
       const link = document.createElement('a');
       link.download = 'combined.png';
       // link.href = combinedCanvas.toDataURL();
@@ -207,12 +206,31 @@ function App() {
 
   const printMap = () => {
     html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
-      // download the combined canvas
       let mywindow = window.open("打印窗口", "_blank");
       mywindow.document.body.appendChild(canvas);
       mywindow.focus();
       mywindow.print();
       mywindow.close();
+    });
+  }
+
+  const share = () => {
+    html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
+      canvas.toBlob(blob => {
+        const file = new File([blob], 'map.png', { type: 'image/png' });
+        const filesArray = [file];
+        if (navigator.canShare && navigator.canShare({ files: filesArray })) {
+          navigator.share({
+            files: filesArray,
+            title: 'Anitabi Map',
+            text: 'Check out this map!',
+          })
+            .then(() => console.log('Share was successful.'))
+            .catch((error) => console.log('Sharing failed', error));
+        } else {
+          console.log('Your browser does not support sharing files.');
+        }
+      }, 'image/png');
     });
   }
 
@@ -223,16 +241,21 @@ function App() {
       {/* three rows */}
       <div className="container-fluid">
         <div className="row align-items-center m-2">
+          <div className='col-md-3'>
+            <div className='row align-items-center'>
+              <div className="col-md-auto">
+                <h2>AT Mapper</h2>
+              </div>
+              <div className="col-md-auto">
+                {/* download button */}
+                {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
+                {/* print button */}
+                {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={printMap}><i class="bi bi-printer"></i></button>}
+                {/* share button */}
+                {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={share}><i class="bi bi-share"></i></button>}
 
-          <div className="col-md-2">
-            <h2>AT Mapper</h2>
-          </div>
-          <div className="col-md-1">
-            {/* download button */}
-            {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
-            {/* print button */}
-            {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={printMap}><i class="bi bi-printer"></i></button>}
-
+              </div>
+            </div>
           </div>
           <div className="col col-md-6 position-relative">
             <div className='row'>
