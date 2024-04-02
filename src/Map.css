@@ -33,5 +33,5 @@
     color: black;
     box-shadow: 5px 5px 8px 0px rgb(0 0 0 / 67%) !important;
     border-radius: 5px;
-
+    border: 2px solid rgba(0, 0, 0, 0.517);
 }
