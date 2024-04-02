@@ -37,7 +37,7 @@ function App() {
 
 
   // map language
-  const [lang, setLang] = useState('zh-Hans');
+  const [lang, setLang] = useState('ja');
 
 
 
