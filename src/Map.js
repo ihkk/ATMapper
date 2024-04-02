@@ -37,6 +37,24 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
         const language = new MapboxLanguage();
         map.addControl(language);
         map.on('load', function () {
+            if (tmpPoints && tmpPoints.length > 0) {
+                tmpPoints.forEach((point) => {
+                    const el = document.createElement('div');
+                    el.className = 'custom-marker-square';
+
+                    el.style.width = '15px';
+                    el.style.height = '15px';
+                    el.style.backgroundColor = 'blue';
+                    el.style.cursor = 'pointer';
+                    // listener to add point to the list
+                    el.addEventListener('click', () => onAddGeoPoint(point));
+
+
+                    new mapboxgl.Marker(el)
+                        .setLngLat([point.getLongitude(), point.getLatitude()])
+                        .addTo(map);
+                });
+            };
             if (geoPoints && geoPoints.length > 0) {
                 geoPoints.forEach((point, index) => {
                     // create a DOM element for the marker
@@ -65,24 +83,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
                         .addTo(map);
                 });
             };
-            if (tmpPoints && tmpPoints.length > 0) {
-                tmpPoints.forEach((point) => {
-                    const el = document.createElement('div');
-                    el.className = 'custom-marker-square';
 
-                    el.style.width = '15px';
-                    el.style.height = '15px';
-                    el.style.backgroundColor = 'blue';
-                    el.style.cursor = 'pointer';
-                    // listener to add point to the list
-                    el.addEventListener('click', () => onAddGeoPoint(point));
-
-
-                    new mapboxgl.Marker(el)
-                        .setLngLat([point.getLongitude(), point.getLatitude()])
-                        .addTo(map);
-                });
-            }
 
         });
 

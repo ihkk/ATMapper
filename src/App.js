@@ -244,21 +244,38 @@ function App() {
         <div className="row">
 
           <div className="col-md-2">
-            {/* display all points from obtainedPoints and allow users to add them to newObtainedPoints*/}
-            <ul className="list-group overflow-auto" style={{ maxHeight: '700px' }}>
-              {obtainedPoints.map((obtainedPoint, index) => {
-                return (
-                  <li key={index} className="list-group-item d-flex justify-content-between align-items-start">
-                    {obtainedPoint.getPosName()}
-                    <button className="btn btn-primary ms-auto"
-                      onClick={() => {
-                        addGeoPoint(obtainedPoint);
-                      }}><i class="bi bi-plus-square"></i></button>
-                  </li>
-                );
-              })}
-            </ul>
-
+            <div className='row'>
+              <div className='col-md-12'>
+                {/* display all points from obtainedPoints and allow users to add them to newObtainedPoints*/}
+                <ul className="list-group overflow-auto" style={{ maxHeight: '700px' }}>
+                  {obtainedPoints.map((obtainedPoint, index) => {
+                    return (
+                      <li key={index} className="list-group-item d-flex justify-content-between align-items-start">
+                        {obtainedPoint.getPosName()}
+                        <button className="btn btn-primary ms-auto"
+                          onClick={() => {
+                            addGeoPoint(obtainedPoint);
+                          }}><i class="bi bi-plus-square"></i></button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+            {/* a button to delete all obtained items */}
+            {obtainedPoints.length > 0 && <div className='row pt-2'>
+              <div className='col-md-12'>
+                <button
+                  className="btn btn-danger w-100"
+                  onClick={() => {
+                    setObtainedPoints([]);
+                    localStorage.setItem('obtainedPoints', JSON.stringify([]));
+                  }}
+                >
+                  清空
+                </button>
+              </div>
+            </div>}
           </div>
 
           <div className="col-md-8 ">
@@ -295,7 +312,7 @@ function App() {
                         newGeoPoints.splice(overIndex, 0, draggedItem);
                         setGeoPoints(newGeoPoints);
 
-                        setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, geoPoints[draggedIndex]]);
+                        // setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, geoPoints[draggedIndex]]);
                       }}
                     >
                       <span className="badge bg-secondary me-3">{index + 1}</span>
@@ -313,9 +330,25 @@ function App() {
                     </li>
                   ))}
                 </ul>
-
               </div>
             </div>
+            {/* a button to delete all added items */}
+            {geoPoints.length > 0 && <div className='row pt-2'>
+              <div className='col-md-12'>
+                <button
+                  className="btn btn-danger w-100"
+                  onClick={() => {
+                    setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, ...geoPoints]);
+                    setGeoPoints([]);
+                    localStorage.setItem('obtainedPoints', JSON.stringify([...obtainedPoints, ...geoPoints]));
+                    localStorage.setItem('geoPoints', JSON.stringify([]));
+                  }}
+                >
+                  清空
+                </button>
+              </div>
+            </div>}
+
           </div>
         </div>
 
