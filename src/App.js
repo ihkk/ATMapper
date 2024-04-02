@@ -36,14 +36,23 @@ function App() {
   const positions = ['top-left', 'bottom-left', 'bottom-right', 'top-right', 'hide'];
 
 
+  // map style
+  const [style, setStyle] = useState('mapbox://styles/ihkk/cluivj2kb00zf01pi3ay4cyw3');
+
   // map language
   const [lang, setLang] = useState('ja');
 
-  // footer info
+  // about site info
   const [showModal, setShowModal] = useState(false);
 
 
   const toggleModal = () => setShowModal(!showModal);
+
+  const toggleStyle = () => {
+    const style1 = 'mapbox://styles/ihkk/cluivj2kb00zf01pi3ay4cyw3';
+    const style2 = 'mapbox://styles/ihkk/cluiv59tg00nh01peah4c3yve';
+    setStyle(currentStyle => currentStyle === style1 ? style2 : style1);
+  };
 
 
   useEffect(() => {
@@ -306,6 +315,15 @@ function App() {
             <button className="btn btn-secondary ms-2" onClick={() => { setLang(lang === 'zh-Hans' ? 'ja' : 'zh-Hans') }}><i class="bi bi-translate"></i></button>
             {/* change legend pos */}
             <button className="btn btn-secondary ms-2" onClick={() => { toggleLegendPosition() }}>切换图例</button>
+            {/* change map style */}
+            <button className="btn btn-secondary ms-2" onClick={toggleStyle}>
+              {style === 'mapbox://styles/ihkk/cluivj2kb00zf01pi3ay4cyw3' ? (
+                <i className="bi bi-palette"></i>
+              ) : (
+                <i className="bi bi-palette-fill"></i>
+              )}
+            </button>
+
             {/* info */}
             <button className="btn btn-secondary ms-2" onClick={toggleModal}>
               <i class="bi bi-info-circle"></i>
@@ -365,7 +383,7 @@ function App() {
           </div>
 
           <div className="col-md-8 ">
-            <Map geoPoints={geoPoints} tmpPoints={obtainedPoints} lang={lang} onAddGeoPoint={addGeoPoint} onDeleteGeoPoint={deleteGeoPoint} legendPosition={legendPosition} />
+            <Map geoPoints={geoPoints} tmpPoints={obtainedPoints} lang={lang} onAddGeoPoint={addGeoPoint} onDeleteGeoPoint={deleteGeoPoint} legendPosition={legendPosition} mapStyle={style} />
           </div>
 
           <div className="col-md-2">

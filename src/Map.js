@@ -6,7 +6,7 @@ import './Map.css';
 mapboxgl.accessToken =
     'pk.eyJ1IjoiaWhrayIsImEiOiJjbHVkZWRlMG8xYWFsMmxxbnAxMm9yZ3U3In0.vz0G2accFeSOiZnLVBzsIw';
 
-function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, legendPosition }) {
+function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, legendPosition, mapStyle }) {
     const mapContainerRef = useRef(null);
 
     const [lng, setLng] = useState(140);
@@ -59,7 +59,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
     useEffect(() => {
         const map = new mapboxgl.Map({
             container: mapContainerRef.current,
-            style: 'mapbox://styles/ihkk/clufvac8l00tw01pib4ek0884',
+            style: mapStyle,
             language: lang,
             center: [lng, lat],
             zoom: zoom,
@@ -183,7 +183,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
 
         // Clean up on unmount
         return () => map.remove();
-    }, [geoPoints, tmpPoints, lang, legendPosition]);
+    }, [geoPoints, tmpPoints, lang, legendPosition, mapStyle]);
 
     return (
         <div>
