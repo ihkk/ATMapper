@@ -31,6 +31,9 @@ function App() {
   const [showObtainedPoints, setShowObtainedPoints] = useState(true);
   const [hiddenObtainedPoints, setHiddenObtainedPoints] = useState([]);
 
+  // legend position
+  const [legendPosition, setLegendPosition] = useState('bottom-right'); // default
+  const positions = ['top-left', 'bottom-left', 'bottom-right', 'top-right', 'hide'];
 
 
   // map language
@@ -59,6 +62,14 @@ function App() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [dropdownRef]);
+
+  // function to change the position of legend
+  const toggleLegendPosition = () => {
+    const currentIndex = positions.indexOf(legendPosition);
+    const nextIndex = (currentIndex + 1) % positions.length;
+    setLegendPosition(positions[nextIndex]);
+  };
+
 
 
   // function allowing users to add a new geo point to the state
@@ -240,6 +251,10 @@ function App() {
             {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
             {/* switch language */}
             <button className="btn btn-secondary ms-2" onClick={() => { setLang(lang === 'zh-Hans' ? 'ja' : 'zh-Hans') }}><i class="bi bi-translate"></i></button>
+            {/* change legend pos */}
+            <button className="btn btn-secondary ms-2" onClick={() => { toggleLegendPosition() }}>切换图例</button>
+
+
           </div>
 
         </div>
@@ -293,7 +308,7 @@ function App() {
           </div>
 
           <div className="col-md-8 ">
-            <Map geoPoints={geoPoints} tmpPoints={obtainedPoints} lang={lang} onAddGeoPoint={addGeoPoint} />
+            <Map geoPoints={geoPoints} tmpPoints={obtainedPoints} lang={lang} onAddGeoPoint={addGeoPoint} legendPosition={legendPosition} />
           </div>
 
           <div className="col-md-2">

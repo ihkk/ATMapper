@@ -6,7 +6,7 @@ import './Map.css';
 mapboxgl.accessToken =
     'pk.eyJ1IjoiaWhrayIsImEiOiJjbHVkZWRlMG8xYWFsMmxxbnAxMm9yZ3U3In0.vz0G2accFeSOiZnLVBzsIw';
 
-function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
+function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, legendPosition }) {
     const mapContainerRef = useRef(null);
 
     const [lng, setLng] = useState(140);
@@ -98,9 +98,41 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
             const legendContainer = map.getContainer();
             legendContainer.appendChild(legend);
             legend.style.position = 'absolute';
-            legend.style.bottom = '10px';
-            legend.style.right = '10px';
-
+            switch (legendPosition) {
+                case 'top-left':
+                    legend.style.top = '10px';
+                    legend.style.left = '10px';
+                    legend.style.bottom = '';
+                    legend.style.right = '';
+                    break;
+                case 'bottom-left':
+                    legend.style.bottom = '10px';
+                    legend.style.left = '10px';
+                    legend.style.top = '';
+                    legend.style.right = '';
+                    break;
+                case 'top-right':
+                    legend.style.top = '10px';
+                    legend.style.right = '10px';
+                    legend.style.bottom = '';
+                    legend.style.left = '';
+                    break;
+                case 'bottom-right':
+                    legend.style.bottom = '10px';
+                    legend.style.right = '10px';
+                    legend.style.top = '';
+                    legend.style.left = '';
+                    break;
+                case 'hide':
+                    legend.style.display = 'none';
+                default:
+                    // 默认为 bottom-right
+                    legend.style.bottom = '10px';
+                    legend.style.right = '10px';
+                    legend.style.top = '';
+                    legend.style.left = '';
+                    break;
+            }
         });
 
         // calculate the center and zoom level of the map from both geoPoints and tmpPoints
@@ -120,7 +152,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
 
         // Clean up on unmount
         return () => map.remove();
-    }, [geoPoints, tmpPoints, lang]);
+    }, [geoPoints, tmpPoints, lang, legendPosition]);
 
     return (
         <div>
