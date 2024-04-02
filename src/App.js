@@ -213,10 +213,10 @@ function App() {
       <div className="container-fluid">
         <div className="row align-items-center m-2">
 
-          <div className="col-md-2">
+          <div className="col-md-3">
             <h2>AT Mapper</h2>
           </div>
-          <div className="col col-md-8 position-relative">
+          <div className="col col-md-6 position-relative">
             <div className='row'>
               <div className="input-group">
                 <input type="text" className="form-control" placeholder="搜索作品" value={keyword} onChange={handleChange} onKeyDown={handleKeyDown} />
@@ -248,7 +248,7 @@ function App() {
               </div>
             )}
           </div>
-          <div className="col-md-2">
+          <div className="col-md-3">
             {/* reset button */}
             {(geoPoints.length > 0 || obtainedPoints.length > 0) &&
               <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]); localStorage.clear(); window.location.reload() }}><i className="bi bi-trash"></i></button>}
