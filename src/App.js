@@ -83,6 +83,15 @@ function App() {
     setObtainedPoints(currentPoints => currentPoints.filter(p => p !== newGeoPoint));
   }
 
+  // function allowing users to move a existed geo point back to obtainedPoints
+  const deleteGeoPoint = (oldGeoPoint) => {
+    setGeoPoints(currentPoints => currentPoints.filter(p => p.id !== oldGeoPoint.id));
+    setObtainedPoints(prevObtainedPoints => {
+      const filteredPoints = prevObtainedPoints.filter(p => p.id !== oldGeoPoint.id);
+      return [...filteredPoints, oldGeoPoint];
+    });
+  }
+
   // function to hide/display obtained points
   const toggleObtainedPointsVisibility = () => {
     if (showObtainedPoints) {
@@ -356,7 +365,7 @@ function App() {
           </div>
 
           <div className="col-md-8 ">
-            <Map geoPoints={geoPoints} tmpPoints={obtainedPoints} lang={lang} onAddGeoPoint={addGeoPoint} legendPosition={legendPosition} />
+            <Map geoPoints={geoPoints} tmpPoints={obtainedPoints} lang={lang} onAddGeoPoint={addGeoPoint} onDeleteGeoPoint={deleteGeoPoint} legendPosition={legendPosition} />
           </div>
 
           <div className="col-md-2">

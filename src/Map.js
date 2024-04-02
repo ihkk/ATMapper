@@ -6,7 +6,7 @@ import './Map.css';
 mapboxgl.accessToken =
     'pk.eyJ1IjoiaWhrayIsImEiOiJjbHVkZWRlMG8xYWFsMmxxbnAxMm9yZ3U3In0.vz0G2accFeSOiZnLVBzsIw';
 
-function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, legendPosition }) {
+function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, legendPosition }) {
     const mapContainerRef = useRef(null);
 
     const [lng, setLng] = useState(140);
@@ -90,12 +90,12 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, legendPosition }) {
                     el.style.color = 'white';
                     el.style.fontSize = '12px';
                     el.style.fontWeight = 'bold';
+                    el.style.cursor = 'pointer';
+                    el.addEventListener('click', () => onDeleteGeoPoint(point));
 
                     // add marker to map
                     new mapboxgl.Marker(el)
                         .setLngLat([point.getLongitude(), point.getLatitude()])
-                        .setPopup(new mapboxgl.Popup({ offset: 20 })
-                            .setText(`${point.getPosName()}：${point.getAnimeName()}`))
                         .addTo(map);
                 });
             };
