@@ -142,19 +142,24 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
         });
 
         // calculate the center and zoom level of the map from both geoPoints and tmpPoints
-        if ((geoPoints && geoPoints.length > 0) || (tmpPoints && tmpPoints.length > 0)) {
+        if (geoPoints && geoPoints.length > 0) {
             const bounds = new mapboxgl.LngLatBounds();
 
             geoPoints.forEach((point) => {
                 bounds.extend([point.getLongitude(), point.getLatitude()]);
             });
 
+            map.fitBounds(bounds, { padding: 50 });
+        } else if (tmpPoints && tmpPoints.length > 0) {
+            const bounds = new mapboxgl.LngLatBounds();
+
             tmpPoints.forEach((point) => {
                 bounds.extend([point.getLongitude(), point.getLatitude()]);
             });
 
             map.fitBounds(bounds, { padding: 50 });
-        };
+        }
+
 
         // Clean up on unmount
         return () => map.remove();
