@@ -42,7 +42,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
         if (userInteracted) {
             timer = setTimeout(() => {
                 setUserInteracted(false);
-            }, 2000);
+            }, 500);
         }
 
         return () => clearTimeout(timer);
