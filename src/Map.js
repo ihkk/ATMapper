@@ -103,7 +103,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
 
         // Clean up on unmount
         return () => map.remove();
-    }, [geoPoints, lang]);
+    }, [geoPoints, tmpPoints, lang]);
 
     return (
         <div>

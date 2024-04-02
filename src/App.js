@@ -28,6 +28,11 @@ function App() {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [overIndex, setOverIndex] = useState(null);
 
+  // for hiding obtained points
+  const [showObtainedPoints, setShowObtainedPoints] = useState(true);
+  const [hiddenObtainedPoints, setHiddenObtainedPoints] = useState([]);
+
+
   // map language
   const [lang, setLang] = useState('zh-Hans');
 
@@ -61,6 +66,19 @@ function App() {
     setGeoPoints([...geoPoints, newGeoPoint]);
     setObtainedPoints(currentPoints => currentPoints.filter(p => p !== newGeoPoint));
   }
+
+  // function to hide/display obtained points
+  const toggleObtainedPointsVisibility = () => {
+    if (showObtainedPoints) {
+      setHiddenObtainedPoints(obtainedPoints);
+      setObtainedPoints([]);
+    } else {
+      setObtainedPoints(hiddenObtainedPoints);
+      setHiddenObtainedPoints([]);
+    }
+    setShowObtainedPoints(!showObtainedPoints);
+  };
+
 
 
   // obtain points from Anitabi
@@ -214,6 +232,11 @@ function App() {
             {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
             {/* switch language */}
             <button className="btn btn-secondary ms-2" onClick={() => { setLang(lang === 'zh-Hans' ? 'ja' : 'zh-Hans') }}><i class="bi bi-translate"></i></button>
+            {/* hide obtained Points */}
+            <button className="btn btn-secondary ms-2" onClick={toggleObtainedPointsVisibility}>
+              {showObtainedPoints ? '隐藏备选' : '显示备选'}
+            </button>
+
           </div>
 
         </div>
