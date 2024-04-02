@@ -24,3 +24,7 @@
     -ms-overflow-style: none;
     /* IE and Edge */
 }
+
+.mapboxgl-popup-content {
+    color: black;
+}

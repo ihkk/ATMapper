@@ -40,11 +40,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
             if (tmpPoints && tmpPoints.length > 0) {
                 tmpPoints.forEach((point) => {
                     const el = document.createElement('div');
-                    el.className = 'custom-marker-square';
-
-                    el.style.width = '15px';
-                    el.style.height = '15px';
-                    el.style.backgroundColor = 'blue';
+                    el.innerHTML = '<i class="bi bi-geo-alt-fill" style="color: #17a2b8; font-size: 24px;"></i>';
                     el.style.cursor = 'pointer';
                     // listener to add point to the list
                     el.addEventListener('click', () => onAddGeoPoint(point));

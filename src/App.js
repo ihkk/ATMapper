@@ -73,7 +73,15 @@ function App() {
       setHiddenObtainedPoints(obtainedPoints);
       setObtainedPoints([]);
     } else {
-      setObtainedPoints(hiddenObtainedPoints);
+      setObtainedPoints((currentPoints) => {
+        const pointsObj = {};
+
+        currentPoints.forEach(point => pointsObj[point.id] = point);
+        hiddenObtainedPoints.forEach(point => pointsObj[point.id] = point);
+
+        return Object.values(pointsObj);
+      });
+
       setHiddenObtainedPoints([]);
     }
     setShowObtainedPoints(!showObtainedPoints);
@@ -232,11 +240,6 @@ function App() {
             {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
             {/* switch language */}
             <button className="btn btn-secondary ms-2" onClick={() => { setLang(lang === 'zh-Hans' ? 'ja' : 'zh-Hans') }}><i class="bi bi-translate"></i></button>
-            {/* hide obtained Points */}
-            <button className="btn btn-secondary ms-2" onClick={toggleObtainedPointsVisibility}>
-              {showObtainedPoints ? '隐藏备选' : '显示备选'}
-            </button>
-
           </div>
 
         </div>
@@ -262,20 +265,31 @@ function App() {
                 </ul>
               </div>
             </div>
-            {/* a button to delete all obtained items */}
-            {obtainedPoints.length > 0 && <div className='row pt-2'>
-              <div className='col-md-12'>
-                <button
-                  className="btn btn-danger w-100"
-                  onClick={() => {
-                    setObtainedPoints([]);
-                    localStorage.setItem('obtainedPoints', JSON.stringify([]));
-                  }}
-                >
-                  清空
-                </button>
-              </div>
-            </div>}
+            <div className='row pt-2'>
+              {/* hide botton */}
+              {(obtainedPoints.length > 0 || hiddenObtainedPoints.length > 0) &&
+                <div className='col-auto'>
+                  {/* hide obtained Points */}
+                  <button className="btn btn-warning w-100"
+                    onClick={toggleObtainedPointsVisibility}>
+                    {showObtainedPoints ? '隐藏备选' : '显示备选'}
+                  </button>
+                </div>}
+              {/* a button to delete all obtained items */}
+              {obtainedPoints.length > 0 &&
+                <div className='col-auto'>
+                  <button
+                    className="btn btn-danger w-100"
+                    onClick={() => {
+                      setObtainedPoints([]);
+                      localStorage.setItem('obtainedPoints', JSON.stringify([]));
+                    }}
+                  >
+                    清空
+                  </button>
+                </div>}
+
+            </div>
           </div>
 
           <div className="col-md-8 ">
@@ -283,13 +297,6 @@ function App() {
           </div>
 
           <div className="col-md-2">
-            {/* title */}
-            {/* <div className='row'>
-              <div className="col-md-12">
-                <h4 className="text-center">Selected Points</h4>
-              </div>
-            </div> */}
-
 
             <div className='row'>
               <div className="col-md-12">
