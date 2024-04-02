@@ -6,7 +6,7 @@ import './Map.css';
 mapboxgl.accessToken =
     'pk.eyJ1IjoiaWhrayIsImEiOiJjbHVkZWRlMG8xYWFsMmxxbnAxMm9yZ3U3In0.vz0G2accFeSOiZnLVBzsIw';
 
-function Map({ geoPoints, lang }) {
+function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint }) {
     const mapContainerRef = useRef(null);
 
     const [lng, setLng] = useState(140);
@@ -64,17 +64,42 @@ function Map({ geoPoints, lang }) {
                             .setText(`${point.getPosName()}：${point.getAnimeName()}`))
                         .addTo(map);
                 });
+            };
+            if (tmpPoints && tmpPoints.length > 0) {
+                tmpPoints.forEach((point) => {
+                    const el = document.createElement('div');
+                    el.className = 'custom-marker-square';
+
+                    el.style.width = '15px';
+                    el.style.height = '15px';
+                    el.style.backgroundColor = 'blue';
+                    el.style.cursor = 'pointer';
+                    // listener to add point to the list
+                    el.addEventListener('click', () => onAddGeoPoint(point));
+
+
+                    new mapboxgl.Marker(el)
+                        .setLngLat([point.getLongitude(), point.getLatitude()])
+                        .addTo(map);
+                });
             }
+
         });
 
-        // calculate the center and zoom level of the map
-        if (geoPoints && geoPoints.length > 0) {
+        // calculate the center and zoom level of the map from both geoPoints and tmpPoints
+        if ((geoPoints && geoPoints.length > 0) || (tmpPoints && tmpPoints.length > 0)) {
             const bounds = new mapboxgl.LngLatBounds();
+
             geoPoints.forEach((point) => {
                 bounds.extend([point.getLongitude(), point.getLatitude()]);
             });
+
+            tmpPoints.forEach((point) => {
+                bounds.extend([point.getLongitude(), point.getLatitude()]);
+            });
+
             map.fitBounds(bounds, { padding: 50 });
-        }
+        };
 
         // Clean up on unmount
         return () => map.remove();
