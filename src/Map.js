@@ -101,7 +101,8 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, legendPosition }) {
             };
 
             const legendContainer = map.getContainer();
-            legendContainer.appendChild(legend);
+            if (geoPoints.length > 0)
+                legendContainer.appendChild(legend);
             legend.style.position = 'absolute';
             switch (legendPosition) {
                 case 'top-left':
