@@ -195,13 +195,24 @@ function App() {
   }, []);
 
   const download = () => {
-    html2canvas(document.querySelector('.mapboxgl-map')).then(firstCanvas => {
+    html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
       // download the combined canvas
       const link = document.createElement('a');
       link.download = 'combined.png';
       // link.href = combinedCanvas.toDataURL();
-      link.href = firstCanvas.toDataURL();
+      link.href = canvas.toDataURL();
       link.click();
+    });
+  }
+
+  const printMap = () => {
+    html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
+      // download the combined canvas
+      let mywindow = window.open("打印窗口", "_blank");
+      mywindow.document.body.appendChild(canvas);
+      mywindow.focus();
+      mywindow.print();
+      mywindow.close();
     });
   }
 
@@ -213,8 +224,15 @@ function App() {
       <div className="container-fluid">
         <div className="row align-items-center m-2">
 
-          <div className="col-md-3">
+          <div className="col-md-2">
             <h2>AT Mapper</h2>
+          </div>
+          <div className="col-md-1">
+            {/* download button */}
+            {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
+            {/* print button */}
+            {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={printMap}><i class="bi bi-printer"></i></button>}
+
           </div>
           <div className="col col-md-6 position-relative">
             <div className='row'>
@@ -252,8 +270,6 @@ function App() {
             {/* reset button */}
             {(geoPoints.length > 0 || obtainedPoints.length > 0) &&
               <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]); localStorage.clear(); window.location.reload() }}><i className="bi bi-trash"></i></button>}
-            {/* download button */}
-            {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
             {/* switch language */}
             <button className="btn btn-secondary ms-2" onClick={() => { setLang(lang === 'zh-Hans' ? 'ja' : 'zh-Hans') }}><i class="bi bi-translate"></i></button>
             {/* change legend pos */}
