@@ -246,7 +246,7 @@ function App() {
           <div className="col-md-2">
             {/* reset button */}
             {(geoPoints.length > 0 || obtainedPoints.length > 0) &&
-              <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]); localStorage.clear(); window.location.reload() }}><i class="bi bi-arrow-clockwise"></i></button>}
+              <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]); localStorage.clear(); window.location.reload() }}><i className="bi bi-trash"></i></button>}
             {/* download button */}
             {geoPoints.length > 0 && <button className="btn btn-success ms-2" onClick={download}><i class="bi bi-download"></i></button>}
             {/* switch language */}
@@ -283,7 +283,7 @@ function App() {
             <div className='row pt-2'>
               {/* hide botton */}
               {(obtainedPoints.length > 0 || hiddenObtainedPoints.length > 0) &&
-                <div className='col-auto'>
+                <div className='col-md-6'>
                   {/* hide obtained Points */}
                   <button className="btn btn-warning w-100"
                     onClick={toggleObtainedPointsVisibility}>
@@ -292,7 +292,7 @@ function App() {
                 </div>}
               {/* a button to delete all obtained items */}
               {obtainedPoints.length > 0 &&
-                <div className='col-auto'>
+                <div className='col-md-6'>
                   <button
                     className="btn btn-danger w-100"
                     onClick={() => {
@@ -300,7 +300,7 @@ function App() {
                       localStorage.setItem('obtainedPoints', JSON.stringify([]));
                     }}
                   >
-                    清空
+                    清空备选
                   </button>
                 </div>}
 
@@ -337,7 +337,7 @@ function App() {
                         // setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, geoPoints[draggedIndex]]);
                       }}
                     >
-                      <span className="badge bg-secondary me-3">{index + 1}</span>
+                      <span className="badge bg-secondary me-2">{index + 1}</span>
                       <span className="flex-grow-1">{geoPoint.getPosName()}</span>
                       <button
                         className="btn btn-danger ms-auto"
@@ -347,7 +347,7 @@ function App() {
                           setObtainedPoints(prevObtainedPoints => [...prevObtainedPoints, deletedGeoPoint]);
                         }}
                       >
-                        <i className="bi bi-trash"></i>
+                        <i class="bi bi-x-square"></i>
                       </button>
                     </li>
                   ))}
@@ -366,7 +366,7 @@ function App() {
                     localStorage.setItem('geoPoints', JSON.stringify([]));
                   }}
                 >
-                  清空
+                  取消所有已选
                 </button>
               </div>
             </div>}
