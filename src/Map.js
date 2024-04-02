@@ -21,9 +21,14 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, legendPosition }) {
     legend.style.width = '20%';
 
 
+    const allSameAnime = geoPoints.every((point, _, arr) => point.getAnimeName() === arr[0].getAnimeName());
+
     geoPoints.forEach((point, index) => {
         const item = document.createElement('div');
-        item.textContent = `${index + 1}: ${point.getPosName()}`;
+        const textContent = allSameAnime ?
+            `${index + 1}：${point.getPosName()}` :
+            `${index + 1}：${point.getPosName()} [${point.getAnimeName()[0]}]`;
+        item.textContent = textContent;
         legend.appendChild(item);
     });
 
@@ -72,7 +77,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, legendPosition }) {
                     // create a DOM element for the marker
                     const el = document.createElement('div');
                     el.className = 'custom-marker';
-                    el.innerHTML = `<span class="marker-number">${index + 1}</span>`; // 使用 index 来生成数字
+                    el.innerHTML = `<span class="marker-number">${index + 1}</span>`;
 
                     // set marker style
                     el.style.width = '20px';
@@ -89,7 +94,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, legendPosition }) {
                     // add marker to map
                     new mapboxgl.Marker(el)
                         .setLngLat([point.getLongitude(), point.getLatitude()])
-                        .setPopup(new mapboxgl.Popup({ offset: 20 }) // 添加弹窗
+                        .setPopup(new mapboxgl.Popup({ offset: 20 })
                             .setText(`${point.getPosName()}：${point.getAnimeName()}`))
                         .addTo(map);
                 });
