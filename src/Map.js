@@ -13,6 +13,10 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
     const [lat, setLat] = useState(39);
     const [zoom, setZoom] = useState(4.5);
 
+    // track use interact
+    const [userInteracted, setUserInteracted] = useState(false);
+
+
     // legend
     const legend = document.createElement('div');
     legend.className = 'mapboxgl-ctrl mapboxgl-ctrl-group legend';
@@ -31,6 +35,23 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
         item.textContent = textContent;
         legend.appendChild(item);
     });
+
+    // reset user interact
+    useEffect(() => {
+        let timer;
+        if (userInteracted) {
+            timer = setTimeout(() => {
+                setUserInteracted(false);
+            }, 2000);
+        }
+
+        return () => clearTimeout(timer);
+    }, [userInteracted]);
+
+    const handleInteraction = () => {
+        setUserInteracted(true);
+    };
+
 
 
 
@@ -64,7 +85,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
                     el.innerHTML = '<i class="bi bi-geo-alt-fill" style="color: #17a2b8; font-size: 24px;"></i>';
                     el.style.cursor = 'pointer';
                     // listener to add point to the list
-                    el.addEventListener('click', () => onAddGeoPoint(point));
+                    el.addEventListener('click', () => { onAddGeoPoint(point); setUserInteracted(true); });
 
 
                     new mapboxgl.Marker(el)
@@ -91,7 +112,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
                     el.style.fontSize = '12px';
                     el.style.fontWeight = 'bold';
                     el.style.cursor = 'pointer';
-                    el.addEventListener('click', () => onDeleteGeoPoint(point));
+                    el.addEventListener('click', () => { onDeleteGeoPoint(point); setUserInteracted(true); });
 
                     // add marker to map
                     new mapboxgl.Marker(el)
@@ -142,23 +163,22 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
         });
 
         // calculate the center and zoom level of the map from both geoPoints and tmpPoints
-        if (geoPoints && geoPoints.length > 0) {
-            const bounds = new mapboxgl.LngLatBounds();
+        if (!userInteracted) {
+            if ((geoPoints && geoPoints.length > 0) || (tmpPoints && tmpPoints.length > 0)) {
+                const bounds = new mapboxgl.LngLatBounds();
 
-            geoPoints.forEach((point) => {
-                bounds.extend([point.getLongitude(), point.getLatitude()]);
-            });
+                geoPoints.forEach((point) => {
+                    bounds.extend([point.getLongitude(), point.getLatitude()]);
+                });
 
-            map.fitBounds(bounds, { padding: 50 });
-        } else if (tmpPoints && tmpPoints.length > 0) {
-            const bounds = new mapboxgl.LngLatBounds();
+                tmpPoints.forEach((point) => {
+                    bounds.extend([point.getLongitude(), point.getLatitude()]);
+                });
 
-            tmpPoints.forEach((point) => {
-                bounds.extend([point.getLongitude(), point.getLatitude()]);
-            });
-
-            map.fitBounds(bounds, { padding: 50 });
+                map.fitBounds(bounds, { padding: 50 });
+            };
         }
+
 
 
         // Clean up on unmount
