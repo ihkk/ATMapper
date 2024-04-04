@@ -202,6 +202,7 @@ function App() {
   }, [selectedId]);
 
 
+  const exportScale = 2.5;
 
   // load obtainedPoints and geoPoints from local storage when the component mounts
   useEffect(() => {
@@ -213,7 +214,7 @@ function App() {
   }, []);
 
   const download = () => {
-    html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
+    html2canvas(document.querySelector('.mapboxgl-map'), { scale: exportScale }).then(canvas => {
       const link = document.createElement('a');
       link.download = 'combined.png';
       // link.href = combinedCanvas.toDataURL();
@@ -223,7 +224,7 @@ function App() {
   }
 
   const printMap = () => {
-    html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
+    html2canvas(document.querySelector('.mapboxgl-map'), { scale: exportScale }).then(canvas => {
       let mywindow = window.open("打印窗口", "_blank");
       mywindow.document.body.appendChild(canvas);
       mywindow.focus();
@@ -233,7 +234,7 @@ function App() {
   }
 
   const share = () => {
-    html2canvas(document.querySelector('.mapboxgl-map')).then(canvas => {
+    html2canvas(document.querySelector('.mapboxgl-map'), { scale: exportScale }).then(canvas => {
       canvas.toBlob(blob => {
         const file = new File([blob], 'map.png', { type: 'image/png' });
         const filesArray = [file];
