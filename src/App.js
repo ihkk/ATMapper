@@ -459,12 +459,6 @@ function App() {
                   <button type="button" className="btn-close" onClick={toggleModal}></button>
                 </div>
                 <div className="modal-body">
-                  <div className='row mb-2'>
-                    <span class="mb-md-0 text-muted">
-                      <b>A</b>ini<b>T</b>abi <b>Mapper</b> is a web app works with Anitabi.
-                      <br />The app helps to generate printable customized <i>junrei</i> maps.
-                    </span>
-                  </div>
                   <div className='row'>
                     <span class="mb-md-0 text-muted">
                       ©
