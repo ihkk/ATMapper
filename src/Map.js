@@ -8,6 +8,8 @@ mapboxgl.accessToken =
 
 function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, legendPosition, mapStyle }) {
     const mapContainerRef = useRef(null);
+    const mapRef = useRef(null);
+    const markersRef = useRef([]);
 
     const [lng, setLng] = useState(140);
     const [lat, setLat] = useState(39);
@@ -53,8 +55,6 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
     };
 
 
-
-
     // Initialize map when component mounts
     useEffect(() => {
         const map = new mapboxgl.Map({
@@ -67,8 +67,6 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
             preserveDrawingBuffer: true
         });
 
-        // Add navigation control (the +/- zoom buttons)
-        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
         map.on('move', () => {
             setLng(map.getCenter().lng.toFixed(4));
@@ -78,111 +76,111 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
 
         const language = new MapboxLanguage();
         map.addControl(language);
-        map.on('load', function () {
-            if (tmpPoints && tmpPoints.length > 0) {
-                tmpPoints.forEach((point) => {
-                    const el = document.createElement('div');
-                    el.innerHTML = '<i class="bi bi-geo-alt-fill" style="color: #17a2b8; font-size: 24px;"></i>';
-                    el.style.cursor = 'pointer';
-                    // listener to add point to the list
-                    el.addEventListener('click', () => { onAddGeoPoint(point); setUserInteracted(true); });
+        mapRef.current = map;
+        return () => map.remove();
+    }, [lang, mapStyle]);
 
+    // update marker and legend
+    useEffect(() => {
+        const map = mapRef.current;
 
-                    new mapboxgl.Marker(el)
-                        .setLngLat([point.getLongitude(), point.getLatitude()])
-                        .addTo(map);
-                });
-            };
-            if (geoPoints && geoPoints.length > 0) {
-                geoPoints.forEach((point, index) => {
-                    // create a DOM element for the marker
-                    const el = document.createElement('div');
-                    el.className = 'custom-marker';
-                    el.innerHTML = `<span class="marker-number">${index + 1}</span>`;
+        if (!map || !geoPoints || !tmpPoints) return;
 
-                    // set marker style
-                    el.style.width = '20px';
-                    el.style.height = '20px';
-                    el.style.borderRadius = '50%';
-                    el.style.backgroundColor = 'black';
-                    el.style.display = 'flex';
-                    el.style.alignItems = 'center';
-                    el.style.justifyContent = 'center';
-                    el.style.color = 'white';
-                    el.style.fontSize = '12px';
-                    el.style.fontWeight = 'bold';
-                    el.style.cursor = 'pointer';
-                    el.addEventListener('click', () => { onDeleteGeoPoint(point); setUserInteracted(true); });
+        // clear all markers and legend
+        markersRef.current.forEach(marker => marker.remove());
+        markersRef.current = [];
 
-                    // add marker to map
-                    new mapboxgl.Marker(el)
-                        .setLngLat([point.getLongitude(), point.getLatitude()])
-                        .addTo(map);
-                });
-            };
+        let legend = document.querySelector('.legend');
+        if (legend) {
+            legend.remove();
+        }
 
-            const legendContainer = map.getContainer();
-            if (geoPoints.length > 0)
-                legendContainer.appendChild(legend);
+        // add markers for tmpPoints
+        tmpPoints.forEach(point => {
+            const el = document.createElement('div');
+            el.innerHTML = '<i class="bi bi-geo-alt-fill" style="color: #17a2b8; font-size: 24px;"></i>';
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', () => {
+                onAddGeoPoint(point);
+                setUserInteracted(true);
+            });
+
+            const marker = new mapboxgl.Marker(el)
+                .setLngLat([point.getLongitude(), point.getLatitude()])
+                .addTo(map);
+            markersRef.current.push(marker);
+        });
+
+        // add markers for geoPoints
+        geoPoints.forEach((point, index) => {
+            const el = document.createElement('div');
+            el.className = 'custom-marker';
+            el.innerHTML = `<span class="marker-number">${index + 1}</span>`;
+
+            el.style = `
+                width: 20px; height: 20px; border-radius: 50%;
+                background-color: black; display: flex; align-items: center;
+                justify-content: center; color: white; font-size: 12px;
+                font-weight: bold; cursor: pointer;`;
+
+            el.addEventListener('click', () => {
+                onDeleteGeoPoint(point);
+                setUserInteracted(true);
+            });
+
+            const marker = new mapboxgl.Marker(el)
+                .setLngLat([point.getLongitude(), point.getLatitude()])
+                .addTo(map);
+            markersRef.current.push(marker);
+        });
+
+        // add legend
+        if (geoPoints.length > 0 && legendPosition !== 'hide') {
+            legend = document.createElement('div');
+            legend.className = 'mapboxgl-ctrl mapboxgl-ctrl-group legend';
             legend.style.position = 'absolute';
+            legend.style.backgroundColor = '#fff';
+            legend.style.padding = '10px';
+            legend.style.width = '20%';
+
             switch (legendPosition) {
                 case 'top-left':
                     legend.style.top = '10px';
                     legend.style.left = '10px';
-                    legend.style.bottom = '';
-                    legend.style.right = '';
                     break;
                 case 'bottom-left':
                     legend.style.bottom = '10px';
                     legend.style.left = '10px';
-                    legend.style.top = '';
-                    legend.style.right = '';
                     break;
                 case 'top-right':
                     legend.style.top = '10px';
                     legend.style.right = '10px';
-                    legend.style.bottom = '';
-                    legend.style.left = '';
                     break;
                 case 'bottom-right':
                     legend.style.bottom = '10px';
                     legend.style.right = '10px';
-                    legend.style.top = '';
-                    legend.style.left = '';
                     break;
-                case 'hide':
-                    legend.style.display = 'none';
                 default:
-                    // 默认为 bottom-right
                     legend.style.bottom = '10px';
                     legend.style.right = '10px';
-                    legend.style.top = '';
-                    legend.style.left = '';
                     break;
             }
-        });
 
-        // calculate the center and zoom level of the map from both geoPoints and tmpPoints
-        if (!userInteracted) {
-            if ((geoPoints && geoPoints.length > 0) || (tmpPoints && tmpPoints.length > 0)) {
-                const bounds = new mapboxgl.LngLatBounds();
+            geoPoints.forEach((point, index) => {
+                const item = document.createElement('div');
+                item.textContent = `${index + 1}: ${point.getPosName()}`;
+                legend.appendChild(item);
+            });
 
-                geoPoints.forEach((point) => {
-                    bounds.extend([point.getLongitude(), point.getLatitude()]);
-                });
-
-                tmpPoints.forEach((point) => {
-                    bounds.extend([point.getLongitude(), point.getLatitude()]);
-                });
-
-                map.fitBounds(bounds, { padding: 50 });
-            };
+            map.getContainer().appendChild(legend);
         }
-
-
-
-        // Clean up on unmount
-        return () => map.remove();
+        // calculate the center and zoom level of the map from both geoPoints and tmpPoints
+        if (!userInteracted && (geoPoints.length > 0 || tmpPoints.length > 0)) {
+            const bounds = new mapboxgl.LngLatBounds();
+            geoPoints.forEach(point => bounds.extend([point.getLongitude(), point.getLatitude()]));
+            tmpPoints.forEach(point => bounds.extend([point.getLongitude(), point.getLatitude()]));
+            map.fitBounds(bounds, { padding: 50 });
+        }
     }, [geoPoints, tmpPoints, lang, legendPosition, mapStyle]);
 
     return (
