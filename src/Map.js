@@ -167,6 +167,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
                 legend.appendChild(item);
             });
             map.getContainer().appendChild(legend);
+            map.resize();
         }
         // calculate the center and zoom level of the map from both geoPoints and tmpPoints
         if (!userInteracted && (geoPoints.length > 0 || tmpPoints.length > 0)) {
@@ -178,7 +179,7 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
     }, [geoPoints, tmpPoints, lang, legendPosition, mapStyle]);
 
     return (
-        <div>
+        <div id="map-container">
             <div id="map" ref={mapContainerRef} />
         </div>
     );
