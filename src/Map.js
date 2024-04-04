@@ -29,14 +29,6 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
 
     const allSameAnime = geoPoints.every((point, _, arr) => point.getAnimeName() === arr[0].getAnimeName());
 
-    geoPoints.forEach((point, index) => {
-        const item = document.createElement('div');
-        const textContent = allSameAnime ?
-            `${index + 1}：${point.getPosName()}` :
-            `${index + 1}：${point.getPosName()} [${point.getAnimeName()[0]}]`;
-        item.textContent = textContent;
-        legend.appendChild(item);
-    });
 
     // reset user interact
     useEffect(() => {
@@ -168,10 +160,12 @@ function Map({ geoPoints, tmpPoints, lang, onAddGeoPoint, onDeleteGeoPoint, lege
 
             geoPoints.forEach((point, index) => {
                 const item = document.createElement('div');
-                item.textContent = `${index + 1}: ${point.getPosName()}`;
+                const textContent = allSameAnime ?
+                    `${index + 1}：${point.getPosName()}` :
+                    `${index + 1}：${point.getPosName()} [${point.getAnimeName()[0]}]`;
+                item.textContent = textContent;
                 legend.appendChild(item);
             });
-
             map.getContainer().appendChild(legend);
         }
         // calculate the center and zoom level of the map from both geoPoints and tmpPoints
