@@ -33,7 +33,7 @@ function App() {
 
   // legend position
   const [legendPosition, setLegendPosition] = useState('bottom-right'); // default
-  const positions = ['top-left', 'bottom-left', 'bottom-right', 'top-right', 'hide'];
+  const positions = ['bottom-right', 'bottom-left', 'top-left', 'top-right', 'hide'];
 
 
   // map style
