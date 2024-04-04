@@ -309,7 +309,7 @@ function App() {
           </div>
           <div className="col-md-3">
             {/* reset button */}
-            {(geoPoints.length > 0 || obtainedPoints.length > 0) &&
+            {(geoPoints.length > 0 || obtainedPoints.length > 0 || hiddenObtainedPoints.length > 0) &&
               <button className="btn btn-danger" onClick={() => { setGeoPoints([]); setObtainedPoints([]); localStorage.clear(); window.location.reload() }}><i className="bi bi-trash"></i></button>}
             {/* switch language */}
             <button className="btn btn-secondary ms-2" onClick={() => { setLang(lang === 'zh-Hans' ? 'ja' : 'zh-Hans') }}><i class="bi bi-translate"></i></button>
